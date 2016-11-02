@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<some_name>
+    <section attr10="val1" attr20="val2">
+        <collection_node>
+            <child_node1 />
+        </collection_node>
+    </section>
+    <value_node>12</value_node>
+    <unpair_tag/>
+</some_name>

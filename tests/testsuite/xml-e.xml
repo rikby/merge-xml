@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<some_name>
+    <section attr2="val2" attr20="val22">
+        <collection_node>
+            <child_node2 />
+        </collection_node>
+        <collection_node>
+            <child_node3 />
+        </collection_node>
+    </section>
+    <another_section>
+        <collection_node>
+            <some_child>
+                <foo>foo</foo>
+            </some_child>
+        </collection_node>
+        <collection_node>
+            <another_child>
+                <foo>bar</foo>
+            </another_child>
+        </collection_node>
+    </another_section>
+    <value_node>44</value_node>
+</some_name>
