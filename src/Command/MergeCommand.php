@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Rikby\MergeXml\Command
  */
-class MergeXml extends AbstractCommand
+class MergeCommand extends AbstractCommand
 {
     /**
      * {@inheritdoc}

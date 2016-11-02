@@ -2,7 +2,7 @@
 /** @var Composer\Autoload\ClassLoader $autoloader */
 $autoloader = require 'autoload-init.php';
 
-use Rikby\MergeXml\Command\MergeXml;
+use Rikby\MergeXml\Command\MergeCommand;
 use Symfony\Component\Console\Application;
 
 if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] !== 'merge') {
@@ -10,7 +10,7 @@ if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] !== 'merge') {
     array_unshift($_SERVER['argv'], $file, 'merge');
 }
 
-$command = new MergeXml();
+$command = new MergeCommand();
 $application = new Application();
 $application->add($command);
 $application->setDefaultCommand($command->getName());
