@@ -13,7 +13,7 @@ class Merger
      *
      * @var array
      */
-    protected $collectionNodes = array();
+    protected $collectionNodes = [];
 
     /**
      * Xpath of a process node
@@ -32,7 +32,7 @@ class Merger
      */
     public function addCollectionNode($xpath)
     {
-        $this->collectionNodes[] = 'root/'.$xpath;
+        $this->collectionNodes[] = '/' . $this->rootNodeName . '/' . $xpath;
 
         return $this;
     }
@@ -40,42 +40,31 @@ class Merger
     /**
      * Merge two XML
      *
-     * @param \SimpleXMLElement|string $xmlSource
+     * @param \SimpleXMLElement|string       $xmlSource
      * @param array|\SimpleXMLElement|string $xmlUpdates
+     * @param bool                           $file       Arguments should paths to files if TRUE
      * @return \SimpleXMLElement
      */
-    public function merge($xmlSource, $xmlUpdates)
+    public function merge($xmlSource, $xmlUpdates, $file = false)
     {
         if (is_string($xmlSource)) {
-            $xmlSource = simplexml_load_string($xmlSource);
+            $xmlSource = $file ? simplexml_load_file($xmlSource)
+                : simplexml_load_string($xmlSource);
         }
+        $this->rootNodeName = $xmlSource->getName();
+
         if (!is_array($xmlUpdates)) {
             $xmlUpdates = [$xmlUpdates];
         }
         foreach ($xmlUpdates as $xmlUpdate) {
             if (is_string($xmlUpdate)) {
-                $xmlUpdate = simplexml_load_string($xmlUpdate);
+                $xmlUpdate = $file ? simplexml_load_file($xmlUpdate)
+                    : simplexml_load_string($xmlUpdate);
             }
             $this->makeMerge($xmlSource, $xmlUpdate);
         }
 
         return $xmlSource;
-    }
-
-    /**
-     * Append XML node (not overwrite)
-     *
-     * @param \SimpleXMLElement $to
-     * @param \SimpleXMLElement $from
-     * @return $this
-     */
-    public function xmlAppend(\SimpleXMLElement $to, \SimpleXMLElement $from)
-    {
-        $toDom   = dom_import_simplexml($to);
-        $fromDom = dom_import_simplexml($from);
-        $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
-
-        return $this;
     }
 
     /**
@@ -102,7 +91,7 @@ class Merger
                     $this->makeMerge($nodeSource, $node);
                 } else {
                     //set only value
-                    $nodeSource[0] = (string) $node;
+                    $nodeSource[0] = (string)$node;
                 }
             }
             $this->unsetProcessXpathName($name);
@@ -119,7 +108,7 @@ class Merger
      */
     protected function addProcessXpathName($name)
     {
-        $this->rootNodeName .= '/'.$name;
+        $this->rootNodeName .= '/' . $name;
 
         return $this;
     }
@@ -135,6 +124,22 @@ class Merger
     }
 
     /**
+     * Append XML node (not overwrite)
+     *
+     * @param \SimpleXMLElement $to
+     * @param \SimpleXMLElement $from
+     * @return $this
+     */
+    public function xmlAppend(\SimpleXMLElement $to, \SimpleXMLElement $from)
+    {
+        $toDom   = dom_import_simplexml($to);
+        $fromDom = dom_import_simplexml($from);
+        $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
+
+        return $this;
+    }
+
+    /**
      * Merge attributes
      *
      * @param \SimpleXMLElement $xmlSource
@@ -146,13 +151,13 @@ class Merger
         if (!$xmlSource->getName()) {
             return $this;
         }
-        $attributes = (array) $xmlSource->attributes();
-        $attributes = isset($attributes['@attributes']) ? $attributes['@attributes'] : array();
+        $attributes = (array)$xmlSource->attributes();
+        $attributes = isset($attributes['@attributes']) ? $attributes['@attributes'] : [];
         foreach ($xmlUpdate->attributes() as $name => $value) {
             if (isset($attributes[$name])) {
-                $xmlSource->attributes()->$name = (string) $value;
+                $xmlSource->attributes()->$name = (string)$value;
             } else {
-                $xmlSource->addAttribute($name, (string) $value);
+                $xmlSource->addAttribute($name, (string)$value);
             }
         }
 

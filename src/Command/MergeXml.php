@@ -12,6 +12,7 @@ use Rikby\Console\Command\AbstractCommand;
 use Rikby\MergeXml\Merger;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -50,6 +51,12 @@ class MergeXml extends AbstractCommand
             InputArgument::IS_ARRAY + InputArgument::REQUIRED,
             'Path to update XML file/s.'
         );
+        $this->addOption(
+            'collection-xpath',
+            'c',
+            InputOption::VALUE_IS_ARRAY + InputOption::VALUE_REQUIRED,
+            'XML path to nodes which are collections.'
+        );
     }
 
     /**
@@ -75,8 +82,12 @@ class MergeXml extends AbstractCommand
     {
         $merger = new Merger();
 
+        foreach ($this->input->getOption('collection-xpath') as $xpath) {
+            $merger->addCollectionNode($xpath);
+        }
+
         return $merger->merge(
-            $this->input->getFirstArgument(), $this->input->getArgument('update_xml')
+            $this->input->getArgument('source_xml'), $this->input->getArgument('update_xml'), true
         );
     }
 
