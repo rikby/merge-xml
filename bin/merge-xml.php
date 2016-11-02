@@ -1,8 +1,19 @@
 <?php
-require_once 'autoload-init.php';
+/** @var Composer\Autoload\ClassLoader $autoloader */
+$autoloader = require 'autoload-init.php';
 
-use Rikby\XmlMerge\Merger;
+use Rikby\MergeXml\Command\MergeXml;
+use Symfony\Component\Console\Application;
 
-$merger = new Merger();
+if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] !== 'merge') {
+    $file = array_shift($_SERVER['argv']);
+    array_unshift($_SERVER['argv'], $file, 'merge');
+}
 
-var_dump($SERVER['args']);
+$command = new MergeXml();
+$application = new Application();
+$application->add($command);
+$application->setDefaultCommand($command->getName());
+$application->run();
+
+
