@@ -13,7 +13,6 @@ if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] !== 'merge') {
 $command = new MergeCommand();
 $application = new Application();
 $application->add($command);
-$application->setDefaultCommand($command->getName());
 $application->run();
 
 
