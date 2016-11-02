@@ -1,0 +1,27 @@
+{
+  "name": "rikby/merge-xml",
+  "description": "XML merger",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "license": "GPL-3.0",
+  "require": {
+    "php": ">=5.4"
+  },
+  "bin": [
+    "bin/merge-xml",
+    "bin/merge-xml.php"
+  ],
+  "require-dev": {
+    "squizlabs/php_codesniffer": "~2.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rikby\\MergeXml\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.x-dev"
+    }
+  }
+}
