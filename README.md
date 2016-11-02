@@ -1,2 +1,6 @@
-# merge-xml
-XML merger with using PHP
+# PHP XML merger
+
+# Download
+```
+$ composer global require rikby/merge-xml
+```
