@@ -1,5 +1,5 @@
 <?php
-namespace Rikby\XmlMerge;
+namespace Rikby\MergeXml;
 
 /**
  * Class of XML Merger
