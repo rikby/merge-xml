@@ -1,0 +1,8 @@
+version: '2'
+services:
+  app:
+    container_name: merge-xml
+    hostname: merge-xml
+    build: .
+    volumes:
+    - '.:/code'
