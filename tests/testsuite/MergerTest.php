@@ -171,6 +171,56 @@ XML;
     }
 
     /**
+     * Test merge two XML contents
+     */
+    public function testMergeWithCData()
+    {
+        $xml1     = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<some_name>
+    <a>
+        <b><![CDATA[qwe&ert]]></b>
+    </a>
+</some_name>
+XML;
+        $xml2     = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<some_name>
+    <a>
+        <c><![CDATA[foo&bar]]></c>
+    </a>
+</some_name>
+XML;
+        $test     = new Merger();
+        $simpleXml = $test->merge($xml1, $xml2);
+
+        //reformat results
+        $actual   = $this->filterResult(
+            $this->filterBaseXml($simpleXml->asXML())
+        );
+
+        $expected = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<some_name>
+    <a>
+        <b>
+        <![CDATA[qwe&ert]]>
+        </b>
+        <c>
+        <![CDATA[foo&bar]]>
+        </c>
+    </a>
+</some_name>
+
+XML;
+        $expected = $this->filterBaseXml($expected);
+
+        //test
+        $this->assertInstanceOf('SimpleXMLElement', $simpleXml);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
      * Add line-delimited formatting in merged linear format
      *
      * @param string $xml
