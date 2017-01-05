@@ -11,7 +11,7 @@ if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] !== 'merge') {
 }
 
 $command = new MergeCommand();
-$application = new Application();
+$application = new Application('MergeXML tool', 'v0.2.0');
 $application->add($command);
 $application->run();
 
