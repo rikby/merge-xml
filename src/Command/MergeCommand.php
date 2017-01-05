@@ -57,6 +57,18 @@ class MergeCommand extends AbstractCommand
             InputOption::VALUE_IS_ARRAY + InputOption::VALUE_REQUIRED,
             'XML path to nodes which are collections.'
         );
+        $this->addOption(
+            'disable-formatting',
+            'F',
+            InputOption::VALUE_NONE,
+            'Disable formatting XML output.'
+        );
+        $this->addOption(
+            'disable-minifying',
+            'M',
+            InputOption::VALUE_NONE,
+            'There is forced merge xml.'
+        );
     }
 
     /**
@@ -97,10 +109,43 @@ class MergeCommand extends AbstractCommand
      * @param \SimpleXMLElement $xml
      * @return string
      */
-    protected function writeXml($xml)
+    protected function writeXml(\SimpleXMLElement $xml)
     {
-        return $this->output->writeln(
-            $xml->asXML()
-        );
+        $raw = $xml->asXML();
+        if (!$this->input->getOption('disable-minifying')) {
+            $raw = $this->getMinifiedXml($xml->asXML());
+        }
+        if (!$this->input->getOption('disable-formatting')) {
+            $raw = $this->getFormattedXml($raw);
+        }
+
+        return $this->output->writeln($raw, OutputInterface::OUTPUT_RAW);
+    }
+
+    /**
+     * Get minified XML string
+     *
+     * @param string $xml
+     * @return string
+     */
+    protected function getMinifiedXml($xml)
+    {
+        return preg_replace('|>\s+<|', '><', $xml);
+    }
+
+    /**
+     * Get formatted XML string
+     *
+     * @param string $xml
+     * @return string
+     */
+    protected function getFormattedXml($xml)
+    {
+        $doc = new \DomDocument('1.0', 'UTF-8');
+        $doc->loadXML($xml);
+        $doc->formatOutput = true;
+        $doc->preserveWhiteSpace = false;
+
+        return $doc->saveXML();
     }
 }
